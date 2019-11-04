@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import sys
-import utility
+from magpurify import utility
 import numpy as np
 import argparse
 import os
@@ -48,7 +48,7 @@ def main():
 	utility.check_input(args)
 	utility.check_database(args)
 	
-	print "\n## Computing mean genome-wide GC content"
+	print("\n## Computing mean genome-wide GC content")
 	contigs = {}
 	for id, seq in utility.parse_fasta(args['fna']):
 		contig = Contig()
@@ -59,14 +59,14 @@ def main():
 	mean = np.mean([c.gc for c in contigs.values()])
 	std = np.std([c.gc for c in contigs.values()])
 	
-	print "\n## Computing per-contig deviation from mean"
+	print("\n## Computing per-contig deviation from mean")
 	for contig in contigs.values():
 		contig.values = {}
 		contig.values['delta'] = abs(contig.gc - mean)
 		contig.values['percent'] = 100 * abs(contig.gc - mean)/mean
 		contig.values['z-score'] = abs(contig.gc - mean)/std
 		
-	print "\n## Identifying outlier contigs"
+	print("\n## Identifying outlier contigs")
 	flagged = []
 	for contig in contigs.values():
 		if contig.values['delta'] > args['cutoff']:

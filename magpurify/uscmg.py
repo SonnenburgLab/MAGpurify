@@ -1,8 +1,8 @@
-#!/usr/bin/env python
+#### #!/usr/bin/env python
 
 
 import os, sys, csv
-import utility
+from magpurify import utility
 from collections import Counter
 import argparse
 

@@ -4,7 +4,7 @@ import sys, Bio.Seq
 from sklearn.decomposition import PCA
 import numpy as np
 import pandas as pd
-import utility
+from magpurify import utility
 import argparse
 import os
 
@@ -60,7 +60,7 @@ def main():
 	utility.check_dependencies(['blastn'])
 	utility.check_database(args)
 	
-	print "\n## Counting tetranucleotides"
+	print("\n## Counting tetranucleotides")
 	# init data
 	kmer_counts = init_kmers()
 	contigs = {}
@@ -84,7 +84,7 @@ def main():
 			start += step
 			stop += step
 
-	print "\n## Normalizing counts"
+	print("\n## Normalizing counts")
 	for contig in contigs.values():
 		total = float(sum(contig.kmers.values()))
 		for kmer, count in contig.kmers.items():
@@ -93,13 +93,13 @@ def main():
 			else:
 				contig.kmers[kmer] = 0.00
 
-	print "\n## Performing PCA"
+	print("\n## Performing PCA")
 	df = pd.DataFrame(dict([(c.id, c.kmers) for c in contigs.values()]))
 	pca = PCA(n_components=1)
 	pca.fit(df)
 	pc1 = pca.components_[0]
 
-	print "\n## Computing per-contig deviation from the mean along the first principal component"
+	print("\n## Computing per-contig deviation from the mean along the first principal component")
 	mean_pc = np.mean(pc1)
 	std_pc = np.std(pc1)
 	for contig_id, contig_pc in zip(list(df.columns), pc1):
@@ -109,7 +109,7 @@ def main():
 		contigs[contig_id].values['delta'] = abs(contig_pc - mean_pc)
 		contigs[contig_id].values['percent'] = 100*abs(contig_pc - mean_pc)/mean_pc
 
-	print "\n## Identifying outlier contigs"
+	print("\n## Identifying outlier contigs")
 	flagged = []
 	for contig in contigs.values():
 		if contig.values['delta'] > args['cutoff']:

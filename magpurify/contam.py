@@ -2,7 +2,7 @@
 
 import os
 import sys
-import utility
+from magpurify import utility
 import argparse
 
 def fetch_args():

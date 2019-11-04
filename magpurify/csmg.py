@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import sys, os, copy, collections, operator
-import utility
+from magpurify import utility
 import argparse
 
 ranks = ['k', 'p', 'c', 'o', 'f', 'g', 's']

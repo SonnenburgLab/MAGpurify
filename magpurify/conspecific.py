@@ -1,7 +1,6 @@
-#!/usr/bin/env python
 
 import os
-import utility
+from magpurify import utility
 import sys
 import argparse
 from operator import itemgetter
@@ -73,6 +72,7 @@ def blastn(query, target, outdir, id):
 		cmd += "-max_target_seqs 1 -max_hsps 1 "
 		cmd += "-query %s -subject %s " % (query, target)
 		out, err = utility.run_process(cmd)
+		out = out.decode('utf8')
 		open(out_path, 'w').write(out)
 	else:
 		out = open(out_path).read()
@@ -96,7 +96,7 @@ def align_contigs(args, genomes):
 		target_to_id[target] = id
 	alignments = []
 	for genome_path, mash_dist in genomes:
-		blast_out = blastn(args['fna'], genome_path, args['tmp_dir'], target_to_id[target])
+		blast_out = blastn(args['fna'], genome_path, args['tmp_dir'], target_to_id[genome_path])
 		alignments.append(blast_out)
 	return alignments
 
